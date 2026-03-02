@@ -1,19 +1,27 @@
 import { mutation, query } from './_generated/server';
 import { v } from 'convex/values';
 
-
-// ============================================================
-// convex/colaboradores.ts
-// ============================================================
 export const criarColaborador = mutation({
-  args: {
-    nome: v.string(), profissao: v.string(),
-    descricao: v.string(), foto: v.string(),
-  },
+  args: { nome: v.string(), profissao: v.string(), descricao: v.string(), foto: v.string() },
   handler: async (ctx, args) => {
     return await ctx.db.insert('colaboradores', {
       ...args, estrelas: 5, totalAvaliacoes: 0, totalTrabalhos: 0, historico: [],
     });
+  },
+});
+
+export const editarColaborador = mutation({
+  args: {
+    id:        v.id('colaboradores'),
+    nome:      v.optional(v.string()),
+    profissao: v.optional(v.string()),
+    descricao: v.optional(v.string()),
+    foto:      v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const { id, ...patch } = args;
+    const clean = Object.fromEntries(Object.entries(patch).filter(([, v]) => v !== undefined));
+    await ctx.db.patch(id, clean);
   },
 });
 
@@ -42,15 +50,11 @@ export const avaliarColaborador = mutation({
   },
 });
 
-// Gera URL temporária para fazer upload
 export const gerarUploadUrl = mutation({
   args: {},
-  handler: async (ctx) => {
-    return await ctx.storage.generateUploadUrl();
-  },
+  handler: async (ctx) => ctx.storage.generateUploadUrl(),
 });
 
-// Salva o storageId como URL permanente
 export const salvarFoto = mutation({
   args: { colaboradorId: v.id('colaboradores'), storageId: v.id('_storage') },
   handler: async (ctx, args) => {

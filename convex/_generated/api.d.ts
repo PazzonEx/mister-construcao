@@ -11,6 +11,7 @@
 import type * as acionamentos from "../acionamentos.js";
 import type * as assinantes from "../assinantes.js";
 import type * as colaboradores from "../colaboradores.js";
+import type * as ordensServico from "../ordensServico.js";
 import type * as trabalhos from "../trabalhos.js";
 
 import type {
@@ -23,6 +24,7 @@ declare const fullApi: ApiFromModules<{
   acionamentos: typeof acionamentos;
   assinantes: typeof assinantes;
   colaboradores: typeof colaboradores;
+  ordensServico: typeof ordensServico;
   trabalhos: typeof trabalhos;
 }>;
 
